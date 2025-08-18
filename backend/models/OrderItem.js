@@ -13,7 +13,6 @@ const orderItemSchema = new mongoose.Schema({
     required: true,
   },
   variantId: { type: mongoose.Schema.Types.ObjectId, ref: "ProductVariant" },
-  quantity: { type: Number, required: true },
   price: { type: Number, required: true },
 });
 

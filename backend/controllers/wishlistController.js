@@ -6,7 +6,7 @@ import Product from "../models/Product.js";
 // @access  Protected
 export const addToWishlist = async (req, res) => {
   try {
-    const userId = req.user._id; // from protect middleware
+    const userId = req.user._id;
     const { productId } = req.body;
 
     // Check if product exists
