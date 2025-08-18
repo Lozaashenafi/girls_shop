@@ -1,14 +1,17 @@
-import express from "express";
+// routes/productRoutes.js
 import {
+  getProducts,
+  getProductById,
   createProduct,
-  getLipsticks,
 } from "../controllers/productController.js";
+import express from "express";
+import upload from "../middlewares/upload.js";
 import { protect, admin } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-router.route("/").post(protect, admin, createProduct);
-
-router.route("/lipsticks").get(getLipsticks);
+router.get("/", getProducts);
+router.get("/:id", getProductById);
+router.post("/", protect, admin, upload.single("image"), createProduct);
 
 export default router;

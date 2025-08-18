@@ -1,28 +1,26 @@
+// middleware/authMiddleware.js
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
 export const protect = async (req, res, next) => {
-  const token =
-    req.headers.authorization?.startsWith("Bearer") &&
-    req.headers.authorization.split(" ")[1];
+  let token = req.headers.authorization?.split(" ")[1];
 
-  if (!token) {
-    return res.status(401).json({ message: "Not authorized" });
-  }
+  if (!token)
+    return res.status(401).json({ message: "Not authorized, no token" });
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = await User.findById(decoded.id).select("-password");
+    req.user = await User.findById(decoded.id).select("-passwordHash");
     next();
   } catch (error) {
-    res.status(401).json({ message: "Invalid token" });
+    res.status(401).json({ message: "Not authorized, token failed" });
   }
 };
 
 export const admin = (req, res, next) => {
-  if (req.user && req.user.isAdmin) {
+  if (req.user && req.user.role === "Admin") {
     next();
   } else {
-    res.status(403).json({ message: "Admin access required" });
+    res.status(403).json({ message: "Admin access only" });
   }
 };

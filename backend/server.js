@@ -1,23 +1,27 @@
 import express from "express";
-import mongoose from "mongoose";
 import dotenv from "dotenv";
+import connectDB from "./config/db.js";
 import productRoutes from "./routes/productRoutes.js";
-import userRoutes from "./routes/userRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
+import categoryRoutes from "./routes/categoryRoutes.js";
 
 dotenv.config();
+connectDB();
 
 const app = express();
+
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
-// MongoDB Connection
-mongoose
-  .connect(process.env.MONGODB_URI)
-  .then(() => console.log("MongoDB Connected"))
-  .catch((err) => console.error(err));
-
-// Routes
 app.use("/api/products", productRoutes);
-app.use("/api/users", userRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/categories", categoryRoutes);
+// Serve uploaded images
+import path from "path";
+app.use(
+  "/uploads/products",
+  express.static(path.join(path.resolve(), "uploads/products"))
+);
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(process.env.PORT || 5000, () => {
+  console.log(`🚀 Server running on port ${process.env.PORT || 5000}`);
+});

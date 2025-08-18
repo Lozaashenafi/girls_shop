@@ -1,21 +1,18 @@
+// models/Product.js
 import mongoose from "mongoose";
 
 const productSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true }, // e.g., "Glossy Lipstick"
-    description: { type: String },
-    price: { type: Number, required: true },
-    category: {
-      type: String,
-      enum: ["lipstick", "eyeshadow", "skincare", "perfume"],
+    categoryId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
       required: true,
     },
-    shade: { type: String }, // e.g., "Rose Pink"
-    skinType: { type: String }, // For skincare
-    images: [{ type: String }], // Cloudinary URLs
-    stock: { type: Number, default: 0 },
-    isVegan: { type: Boolean, default: false },
-    brand: { type: String, required: true },
+    name: { type: String, required: true },
+    description: String,
+    price: { type: Number, required: true },
+    stockQuantity: { type: Number, default: 0 },
+    imageUrl: String,
   },
   { timestamps: true }
 );

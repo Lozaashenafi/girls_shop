@@ -1,21 +1,46 @@
 import Product from "../models/Product.js";
 
-// Create a cosmetic product (Admin only)
-export const createProduct = async (req, res) => {
+export const getProducts = async (req, res) => {
   try {
-    const product = await Product.create(req.body);
-    res.status(201).json(product);
+    const products = await Product.find().populate("categoryId");
+    res.json(products);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
-// Get all lipsticks (example filtered fetch)
-export const getLipsticks = async (req, res) => {
+export const getProductById = async (req, res) => {
   try {
-    const lipsticks = await Product.find({ category: "lipstick" });
-    res.json(lipsticks);
+    const product = await Product.findById(req.params.id).populate(
+      "categoryId"
+    );
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    res.json(product);
   } catch (error) {
-    res.status(500).json({ error: "Server error" });
+    res.status(500).json({ message: error.message });
+  }
+};
+export const createProduct = async (req, res) => {
+  try {
+    const { name, description, price, stockQuantity, categoryId } = req.body;
+
+    if (!req.file) {
+      return res.status(400).json({ message: "Product image is required" });
+    }
+
+    const product = await Product.create({
+      categoryId,
+      name,
+      description,
+      price,
+      stockQuantity,
+      imageUrl: `/uploads/products/${req.file.filename}`, // save relative path
+    });
+
+    res.status(201).json(product);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
