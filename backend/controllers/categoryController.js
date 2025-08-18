@@ -4,7 +4,6 @@ import Category from "../models/Category.js";
 // @desc    Create a new category
 // @route   POST /api/categories
 // @access  Admin
-
 export const createCategory = async (req, res) => {
   try {
     const { categoryName, description } = req.body;
@@ -17,6 +16,7 @@ export const createCategory = async (req, res) => {
     const category = await Category.create({
       categoryName,
       description,
+      imageUrl: req.file ? `/uploads/${req.file.filename}` : null,
     });
 
     res.status(201).json(category);

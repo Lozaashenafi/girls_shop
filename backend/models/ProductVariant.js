@@ -9,6 +9,7 @@ const productVariantSchema = new mongoose.Schema({
   },
   color: String,
   size: String,
+  image: String,
   additionalPrice: { type: Number, default: 0 },
   stockQuantity: { type: Number, default: 0 },
 });

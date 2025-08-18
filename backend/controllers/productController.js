@@ -36,7 +36,7 @@ export const createProduct = async (req, res) => {
       description,
       price,
       stockQuantity,
-      imageUrl: `/uploads/products/${req.file.filename}`, // save relative path
+      imageUrl: `/uploads/${req.file.filename}`, // save relative path
     });
 
     res.status(201).json(product);
