@@ -1,6 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Bell, User, Settings, LogOut, SearchIcon, Search } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
+import { useAuth } from "../context/AuthContext";
+import authService from "../services/authService";
+import { useNavigate } from "react-router-dom";
 
 function Dropdown({ trigger, children }) {
   const [open, setOpen] = useState(false);
@@ -35,18 +38,26 @@ function Dropdown({ trigger, children }) {
     </div>
   );
 }
-
 function Header() {
+  const { setIsLoggedIn, setUserData } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    authService.logout(); // Remove token
+    setIsLoggedIn(false);
+    setUserData({});
+    navigate("/login"); // Redirect
+  };
+
   return (
     <header className="h-16 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-6">
       {/* Search */}
-
       <div className="relative flex-1 max-w-sm">
         <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400 dark:text-gray-500" />
         <input
           type="text"
           placeholder="Search anything..."
-          className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md  focus:outline-none focus:ring-2 focus:ring-pink-500  bg-white text-black dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+          className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 bg-white text-black dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
         />
       </div>
 
@@ -98,6 +109,7 @@ function Header() {
           <div className="border-t border-gray-200 dark:border-gray-700" />
           <button
             type="button"
+            onClick={handleLogout} // now works
             className="flex w-full items-center px-4 py-2 text-sm text-red-600 hover:bg-red-100 dark:hover:bg-red-700 dark:text-red-400"
           >
             <LogOut className="mr-2 h-4 w-4" />

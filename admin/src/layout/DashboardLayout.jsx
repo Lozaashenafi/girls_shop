@@ -3,9 +3,14 @@ import { Outlet } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import { Sidebar } from "../components/Sidebar";
 import { useState } from "react";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../context/authContext";
 
 function DashboardLayout() {
   const [collapsed, setCollapsed] = useState(false);
+  const { isLoggedIn, isAdmin } = useAuth();
+  if (!isLoggedIn) return <Navigate to="/login" />;
+  if (!isAdmin) return <Navigate to="/" />;
 
   function toggleSidebar() {
     setCollapsed((prev) => !prev);

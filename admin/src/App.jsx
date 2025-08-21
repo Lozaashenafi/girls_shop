@@ -11,6 +11,7 @@ import Products from "./pages/Products";
 import Reviews from "./pages/Reviews";
 import Wishlists from "./pages/Wishlists";
 import DashboardLayout from "./layout/DashboardLayout";
+import SignUpPage from "./pages/SignUpPage";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="/analytics" element={<Analytics />} />
           <Route path="*" element={<NotFound />} />
         </Route>
+        <Route path="/login" element={<SignUpPage />} />
       </Routes>
     </>
   );
