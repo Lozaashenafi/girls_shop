@@ -12,12 +12,22 @@ import Reviews from "./pages/Reviews";
 import Wishlists from "./pages/Wishlists";
 import DashboardLayout from "./layout/DashboardLayout";
 import SignUpPage from "./pages/SignUpPage";
+import { AuthProvider } from "./context/AuthContext";
+import PrivateRoute from "./components/PrivateRoute";
+import AddCategory from "./pages/AddCategory";
 
 function App() {
   return (
-    <>
+    <AuthProvider>
       <Routes>
-        <Route path="/" element={<DashboardLayout />}>
+        <Route
+          path="/"
+          element={
+            <PrivateRoute>
+              <DashboardLayout />
+            </PrivateRoute>
+          }
+        >
           <Route index element={<Index />} />
           <Route path="/products" element={<Products />} />
           <Route path="/categories" element={<Categories />} />
@@ -27,11 +37,14 @@ function App() {
           <Route path="/payments" element={<Payments />} />
           <Route path="/wishlists" element={<Wishlists />} />
           <Route path="/analytics" element={<Analytics />} />
+          <Route path="/categories/add" element={<AddCategory />} />
           <Route path="*" element={<NotFound />} />
         </Route>
+
+        {/* Public route */}
         <Route path="/login" element={<SignUpPage />} />
       </Routes>
-    </>
+    </AuthProvider>
   );
 }
 

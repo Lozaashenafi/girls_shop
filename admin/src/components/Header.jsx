@@ -1,8 +1,9 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Bell, User, Settings, LogOut, SearchIcon, Search } from "lucide-react";
-import { ThemeToggle } from "./ThemeToggle";
+// Header.jsx
+import React, { useState, useRef, useEffect, useContext } from "react";
+// import { AuthContext } from "../context/AuthContext";
 import { useAuth } from "../context/AuthContext";
-import authService from "../services/authService";
+import { Bell, User, Settings, LogOut, Search } from "lucide-react";
+import { ThemeToggle } from "./ThemeToggle";
 import { useNavigate } from "react-router-dom";
 
 function Dropdown({ trigger, children }) {
@@ -39,14 +40,11 @@ function Dropdown({ trigger, children }) {
   );
 }
 function Header() {
-  const { setIsLoggedIn, setUserData } = useAuth();
+  const { user, logout } = useAuth(); // ✅ no need for useContext(AuthContext)
   const navigate = useNavigate();
-
   const handleLogout = () => {
-    authService.logout(); // Remove token
-    setIsLoggedIn(false);
-    setUserData({});
-    navigate("/login"); // Redirect
+    logout();
+    navigate("/login");
   };
 
   return (
@@ -81,14 +79,16 @@ function Header() {
         <Dropdown
           trigger={
             <div className="h-9 w-9 rounded-full bg-gradient-to-br from-pink-500 to-pink-600 flex items-center justify-center text-white font-semibold select-none">
-              AD
+              {user?.fullName ? user.fullName.slice(0, 2).toUpperCase() : "?"}
             </div>
           }
         >
           <div className="flex flex-col space-y-1 p-3 text-gray-900 dark:text-gray-100">
-            <p className="text-sm font-medium leading-none">Admin User</p>
+            <p className="text-sm font-medium leading-none">
+              {user?.fullName || "Guest"}
+            </p>
             <p className="text-xs leading-none text-gray-500 dark:text-gray-400">
-              admin@example.com
+              {user?.email || "Not logged in"}
             </p>
           </div>
           <div className="border-t border-gray-200 dark:border-gray-700" />
@@ -109,7 +109,7 @@ function Header() {
           <div className="border-t border-gray-200 dark:border-gray-700" />
           <button
             type="button"
-            onClick={handleLogout} // now works
+            onClick={handleLogout}
             className="flex w-full items-center px-4 py-2 text-sm text-red-600 hover:bg-red-100 dark:hover:bg-red-700 dark:text-red-400"
           >
             <LogOut className="mr-2 h-4 w-4" />

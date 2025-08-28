@@ -1,27 +1,24 @@
-import React, { useState } from "react";
-import { useAuth } from "../context/authContext";
+import React, { useState, useContext } from "react";
+import AuthContext from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
-  const { login } = useAuth();
+  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = await login({ email, password });
-    if (result.success) {
-      navigate("/"); // redirect after login
-      console.log("Login successful");
-      console.log(result);
+    const res = await login(email, password);
+    if (res.success) {
+      navigate("/");
     } else {
-      setErrorMsg(result.message || "Invalid credentials");
+      setError(res.message);
     }
   };
-
   return (
     <div className="flex flex-col md:flex-row h-screen font-sans">
       {/* Left Pane */}
@@ -32,7 +29,7 @@ const LoginPage = () => {
       {/* Right Pane */}
       <div className="w-full md:w-1/2 bg-white flex flex-col justify-center p-8 md:p-16">
         <form onSubmit={handleSubmit} className="w-full max-w-sm mx-auto">
-          {errorMsg && <p className="text-red-500 text-sm mb-4">{errorMsg}</p>}
+          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
           <div className="space-y-6">
             <div>

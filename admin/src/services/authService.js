@@ -1,41 +1,31 @@
-import axios from "../util/axios";
+import api from "../util/axios";
 
-const authService = {
-  login: async (formData) => {
-    try {
-      // ✅ Your backend login route is: POST /api/auth/login
-      const response = await axios.post("/auth/login", formData);
-
-      if (response.data?.token) {
-        localStorage.setItem(
-          "token",
-          JSON.stringify({ token: response.data.token })
-        );
-
-        return {
-          success: true,
-          user: {
-            id: response.data._id,
-            fullName: response.data.fullName,
-            email: response.data.email,
-            role: response.data.role,
-          },
-          token: response.data.token,
-        };
-      }
-
-      return { success: false, message: "Invalid response from server" };
-    } catch (error) {
-      return {
-        success: false,
-        message: error.response?.data?.message || "Login failed",
-      };
-    }
-  },
-
-  logout: () => {
-    localStorage.removeItem("token");
-  },
+// Login request
+export const loginRequest = async (email, password) => {
+  try {
+    const res = await api.post("/auth/login", { email, password });
+    return res.data;
+  } catch (error) {
+    throw error.response?.data || { message: "Login failed" };
+  }
 };
 
-export default authService;
+// Register request (optional, if you need signup)
+export const registerRequest = async (userData) => {
+  try {
+    const res = await api.post("/auth/register", userData);
+    return res.data;
+  } catch (error) {
+    throw error.response?.data || { message: "Registration failed" };
+  }
+};
+
+// Logout request (optional — only if backend has logout route)
+export const logoutRequest = async () => {
+  try {
+    const res = await api.post("/auth/logout");
+    return res.data;
+  } catch (error) {
+    throw error.response?.data || { message: "Logout failed" };
+  }
+};

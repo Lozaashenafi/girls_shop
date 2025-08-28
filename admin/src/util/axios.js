@@ -1,22 +1,17 @@
 import axios from "axios";
-import getAuth from "./authHeader";
-const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
-const instance = axios.create({
-  baseURL: serverURL,
-  withCredentials: true,
+
+const api = axios.create({
+  baseURL:
+    import.meta.env.VITE_REACT_APP_SERVER_URL || "http://localhost:5000/api",
 });
 
-// Set the token in the request headers
-instance.interceptors.request.use(async (config) => {
-  const data = await getAuth();
-  console.log(data.token);
-  const token = data.token;
+// Attach token automatically
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
   if (token) {
-    config.headers = {
-      authorization: token,
-    };
+    config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
 
-export default instance;
+export default api;
