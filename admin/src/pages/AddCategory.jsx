@@ -14,7 +14,6 @@ export default function AddCategory() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
-
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     setFormData((prev) => ({

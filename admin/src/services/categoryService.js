@@ -18,10 +18,12 @@ const categoryService = {
       };
     }
   },
-
   addCategory: async (categoryData) => {
     try {
-      const response = await api.post("/categories", categoryData);
+      console.log("Adding category with data:", categoryData);
+      const response = await api.post("/categories", categoryData, {
+        // headers: { "Content-Type": "multipart/form-data" }, // 👈 important
+      });
       console.log("Added category:", response.data);
       return {
         success: true,
